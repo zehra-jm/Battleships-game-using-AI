@@ -2,6 +2,7 @@
 
 A sophisticated web-based Battleship game with advanced AI opponents, multiple difficulty levels, and special attack features.
 
+You can view the project demo here : https://youtu.be/jS-UW2KXl5w
 ## Overview
 
 This Battleship game pits the player (Navy) against an AI opponent (Pirates) in a classic naval warfare game. The project features an advanced AI with four difficulty levels, including an extremely challenging mode that uses sophisticated targeting algorithms.
