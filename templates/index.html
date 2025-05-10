@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Battleship: Navy vs Pirates</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/ocean-bg.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>BATTLESHIP <span class="subtitle">Navy vs Pirates</span></h1>
+        <div class="scoreboard">
+          <div class="score navy-score">
+            <span class="score-label">Navy Score</span>
+            <span class="score-value" id="navy-score">0</span>
+          </div>
+          <div class="difficulty-selector">
+            <label for="difficulty">Difficulty:</label>
+            <select id="difficulty">
+              <option value="easy">Easy</option>
+              <option value="medium" selected>Medium</option>
+              <option value="hard">Hard</option>
+              <option value="extremely_hard">Extremely Hard</option>
+            </select>
+          </div>
+          <div class="score pirate-score">
+            <span class="score-label">Pirate Score</span>
+            <span class="score-value" id="pirate-score">0</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Game setup section -->
+      <div id="game-setup" class="game-section active">
+        <div class="setup-container">
+          <h2>Position Your Fleet</h2>
+          <div class="setup-controls">
+            <button id="rotate-button" class="btn">Rotate Ship</button>
+            <button id="random-button" class="btn">Random Placement</button>
+            <button id="reset-button" class="btn">Reset</button>
+            <button id="start-button" class="btn primary" disabled>
+              Start Battle
+            </button>
+          </div>
+          <div class="setup-grid-container">
+            <div class="ship-selection">
+              <h3>Your Ships</h3>
+              <div class="ship-list">
+                <div
+                  class="ship-item"
+                  data-ship="carrier"
+                  data-size="5"
+                  draggable="true"
+                >
+                  <div class="ship-icon">
+                    <i class="fas fa-ship"></i><i class="fas fa-ship"></i
+                    ><i class="fas fa-ship"></i><i class="fas fa-ship"></i
+                    ><i class="fas fa-ship"></i>
+                  </div>
+                  <div class="ship-name">Carrier (5)</div>
+                </div>
+                <div
+                  class="ship-item"
+                  data-ship="battleship"
+                  data-size="4"
+                  draggable="true"
+                >
+                  <div class="ship-icon">
+                    <i class="fas fa-ship"></i><i class="fas fa-ship"></i
+                    ><i class="fas fa-ship"></i><i class="fas fa-ship"></i>
+                  </div>
+                  <div class="ship-name">Battleship (4)</div>
+                </div>
+                <div
+                  class="ship-item"
+                  data-ship="cruiser"
+                  data-size="3"
+                  draggable="true"
+                >
+                  <div class="ship-icon">
+                    <i class="fas fa-ship"></i><i class="fas fa-ship"></i
+                    ><i class="fas fa-ship"></i>
+                  </div>
+                  <div class="ship-name">Cruiser (3)</div>
+                </div>
+                <div
+                  class="ship-item"
+                  data-ship="submarine"
+                  data-size="3"
+                  draggable="true"
+                >
+                  <div class="ship-icon">
+                    <i class="fas fa-ship"></i><i class="fas fa-ship"></i
+                    ><i class="fas fa-ship"></i>
+                  </div>
+                  <div class="ship-name">Submarine (3)</div>
+                </div>
+                <div
+                  class="ship-item"
+                  data-ship="destroyer"
+                  data-size="2"
+                  draggable="true"
+                >
+                  <div class="ship-icon">
+                    <i class="fas fa-ship"></i><i class="fas fa-ship"></i>
+                  </div>
+                  <div class="ship-name">Destroyer (2)</div>
+                </div>
+              </div>
+            </div>
+            <div class="setup-grid">
+              <h3>Navy Fleet</h3>
+              <div class="grid" id="setup-board"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main gameplay section -->
+      <div id="game-play" class="game-section">
+        <div class="game-status">
+          <div id="turn-indicator">Your Turn</div>
+          <div id="game-message"></div>
+          <div class="game-controls">
+            <button id="new-game-button" class="btn primary">New Game</button>
+            <button id="air-strike-button" class="btn">Air Strike (1)</button>
+          </div>
+        </div>
+        <div class="game-boards">
+          <div class="board-container">
+            <h2>Navy Fleet</h2>
+            <div class="grid" id="player-board"></div>
+            <div class="ships-remaining navy-ships">
+              <h3>Navy Ships</h3>
+              <div class="ship-items" id="player-ships">
+                <div class="mini-ship" data-ship="carrier">
+                  <i class="fas fa-ship"></i> Carrier
+                </div>
+                <div class="mini-ship" data-ship="battleship">
+                  <i class="fas fa-ship"></i> Battleship
+                </div>
+                <div class="mini-ship" data-ship="cruiser">
+                  <i class="fas fa-ship"></i> Cruiser
+                </div>
+                <div class="mini-ship" data-ship="submarine">
+                  <i class="fas fa-ship"></i> Submarine
+                </div>
+                <div class="mini-ship" data-ship="destroyer">
+                  <i class="fas fa-ship"></i> Destroyer
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="board-container">
+            <h2>Pirate Fleet</h2>
+            <div class="grid" id="ai-board"></div>
+            <div class="ships-remaining pirate-ships">
+              <h3>Pirate Ships</h3>
+              <div class="ship-items" id="ai-ships">
+                <div class="mini-ship" data-ship="carrier">
+                  <i class="fas fa-ship"></i> Carrier
+                </div>
+                <div class="mini-ship" data-ship="battleship">
+                  <i class="fas fa-ship"></i> Battleship
+                </div>
+                <div class="mini-ship" data-ship="cruiser">
+                  <i class="fas fa-ship"></i> Cruiser
+                </div>
+                <div class="mini-ship" data-ship="submarine">
+                  <i class="fas fa-ship"></i> Submarine
+                </div>
+                <div class="mini-ship" data-ship="destroyer">
+                  <i class="fas fa-ship"></i> Destroyer
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Game over modal -->
+      <div id="game-over-modal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 id="game-result-title">Victory!</h2>
+          </div>
+          <div class="modal-body">
+            <p id="game-result-message">You have defeated the pirate fleet!</p>
+            <div id="game-stats">
+              <div class="stat-item">
+                <span class="stat-label">Your Hits:</span>
+                <span class="stat-value" id="player-hits">0</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">AI Hits:</span>
+                <span class="stat-value" id="ai-hits">0</span>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button id="play-again-button" class="btn primary">
+              Play Again
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Audio effects -->
+    <audio
+      id="splash-sound"
+      src="{{ url_for('static', filename='audio/splash.wav') }}"
+      preload="auto"
+    ></audio>
+    <audio
+      id="explosion-sound"
+      src="{{ url_for('static', filename='audio/explosion.wav') }}"
+      preload="auto"
+    ></audio>
+    <audio
+      id="victory-sound"
+      src="{{ url_for('static', filename='audio/victory.wav') }}"
+      preload="auto"
+    ></audio>
+    <audio
+      id="defeat-sound"
+      src="{{ url_for('static', filename='audio/defeat.wav') }}"
+      preload="auto"
+    ></audio>
+
+    <script src="{{ url_for('static', filename='js/battleship.js') }}"></script>
+  </body>
+</html>

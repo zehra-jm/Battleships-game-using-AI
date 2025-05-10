@@ -1,0 +1,47 @@
+/* This file creates a CSS-based ocean background as a fallback */
+body {
+    /* Creating a gradient background that looks like ocean water */
+    background: linear-gradient(
+        to bottom,
+        #1a4367 0%,
+        #2a6491 20%,
+        #3f8cc5 40%,
+        #56a0cf 60%,
+        #79b9de 80%,
+        #98cbe5 100%
+    ) !important;
+}
+
+/* Adding wave animation and texture */
+body:before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(
+            circle at center,
+            rgba(255, 255, 255, 0.1) 0%,
+            rgba(255, 255, 255, 0) 60%
+        ),
+        repeating-linear-gradient(
+            0deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.05) 0.5%,
+            transparent 1%
+        );
+    animation: waves 20s linear infinite;
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes waves {
+    0% {
+        background-position: 0% 0%, 0% 0%;
+    }
+    100% {
+        background-position: 0% 0%, 0% 100%;
+    }
+}
